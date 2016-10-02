@@ -47,7 +47,7 @@ func (self *Aggregator) start() {
 			}
 			store := self.getStore(msg)
 			if _, ok := self.lockedWork[store]; ok {
-				self.processTillLast(store, self.lastByStore[store])
+				self.lastByStore[store] = self.processTillLast(store, self.lastByStore[store])
 				self.PrintSummary(store)
 			}
 		}
