@@ -3,19 +3,12 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/parallelstream/redis-stream-processing-sample/domain"
 	"github.com/satori/go.uuid"
 	"gopkg.in/redis.v4"
 	"math/rand"
 	"time"
 )
-
-type order struct {
-	OrderId      string
-	CustomerId   string
-	CustomerType string
-	Store        string
-	Price        float32
-}
 
 func main() {
 	client := redis.NewClient(&redis.Options{
@@ -40,16 +33,20 @@ func main() {
 	}
 
 }
-func produceOrder() *order {
+func produceOrder() *domain.Order {
 	custType := "retail"
 	if rand.Int31n(2) > 0 {
 		custType = "corporate"
 	}
+	store := "wallmart"
+	if custType == "retail" {
+		store = "netto"
+	}
 
-	return &order{OrderId: uuid.NewV1().String(),
+	return &domain.Order{OrderId: uuid.NewV1().String(),
 		CustomerId:   uuid.NewV1().String(),
 		CustomerType: custType,
-		Store:        "wallmart",
+		Store:        store,
 		Price:        rand.Float32() * 100,
 	}
 }
